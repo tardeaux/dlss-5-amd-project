@@ -16,6 +16,7 @@
 #include <imgui/imgui.h>
 
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <algorithm>
 #include <cmath>
@@ -422,9 +423,41 @@ void RenderMenu(Config* config, float menuResScale)
                 ImGui::SliderInt("AMD neural passes", &passes, 1, 3);
                 editingPasses=ImGui::IsItemActive();
                 if(ImGui::IsItemDeactivatedAfterEdit())config->DlssNrPasses=uint32_t(passes);
-                neuralSlider("Lightning Strength",config->AmdNeuralLightingStrength,0,1);
-                neuralSlider("AMD structure",config->DlssNrLocalStructure,0,2);
-                neuralSlider("AMD character structure",config->DlssNrSkinStructure,0,2);
+                const char* danielVersion = DlssNr::AmdBridge::RuntimeName();
+                const bool daniel040 = danielVersion && std::string_view(danielVersion) == "0.4.0";
+                if (daniel040)
+                {
+                    int style = std::clamp<int>(config->DlssNrStyle.value_or_default(), 0, 2);
+                    if (ImGui::Combo("Style", &style, "Default\0Natural\0Cinematic\0"))
+                        config->DlssNrStyle = static_cast<uint32_t>(style);
+                    HelpMarker("The network's Style channel. 0.4.0: Default, Natural, or Cinematic.");
+
+                    int curve = std::clamp(config->AmdToneCurve.value_or_default(), 0, 1);
+                    if (ImGui::Combo("Tone curve", &curve, "Reinhard (soft)\0ACES (filmic)\0"))
+                        config->AmdToneCurve = curve;
+                    HelpMarker("The display curve the network sees the frame through.");
+
+                    neuralSlider("Black lift", config->AmdBlackLift, 0.f, .25f);
+                    HelpMarker("Floor of the game's display curve. 0 means no lift; 0.25 is the runtime maximum.");
+
+                    int exposure = config->AmdUseGameExposure.value_or_default() ? 0 : 1;
+                    if (ImGui::Combo("Exposure", &exposure, "Game-provided\0Auto-exposure\0"))
+                        config->AmdUseGameExposure = exposure == 0;
+                    HelpMarker("Game-provided uses the exposure texture handed to the upscaler when available."
+                               "\nIf the game supplies none, the runtime falls back to auto exposure."
+                               "\nAuto-exposure always uses the runtime's estimate.");
+
+                    neuralSlider("Tone intensity", config->AmdToneIntensity, 0.f, 2.f);
+                    HelpMarker("Broad lighting and colour response (0.4.0 LocalToneStrength).");
+                    neuralSlider("Structure intensity", config->DlssNrLocalStructure, 0.f, 2.f);
+                    neuralSlider("Skin structure", config->DlssNrSkinStructure, 0.f, 2.f);
+                }
+                else
+                {
+                    neuralSlider("Lightning Strength",config->AmdNeuralLightingStrength,0,1);
+                    neuralSlider("AMD structure",config->DlssNrLocalStructure,0,2);
+                    neuralSlider("AMD character structure",config->DlssNrSkinStructure,0,2);
+                }
             }
 
             if (isLmxxf)
@@ -634,6 +667,11 @@ void RenderMenu(Config* config, float menuResScale)
                         config->AmdNeuralLighting=true;
                         config->AmdEncoding=0;
                         config->AmdNeuralLightingStrength=.5f;
+                        config->DlssNrStyle=0u;
+                        config->AmdToneIntensity=0.0f;
+                        config->AmdToneCurve=0;
+                        config->AmdBlackLift=0.0f;
+                        config->AmdUseGameExposure=true;
                         DlssNr::AmdBridge::InvalidateHistory();
                     }
                     ImGui::TreePop();
