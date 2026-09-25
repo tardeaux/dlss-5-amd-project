@@ -253,7 +253,8 @@ Este proyecto introdujo la **planificación multi-ranura (Multi-Slot Scheduling)
 - **Específicos de `danielblnc`**:
   - `NR slots`: Cantidad de búferes paralelos (2–5, predeterminado 3);
   - `Every-frame`: Fuerza la reducción de ruido en cada fotograma;
-  - `New wait mode`: Alternador del modo de espera de congelación/restauración de estado de 0.3.1.
+  - `New wait mode`: Alternador del modo de espera de congelación/restauración de estado de 0.3.1 / 0.4.0;
+  - **Solo 0.4.0**: `Style` (Default / Natural / Cinematic), `Tone curve` (Reinhard / ACES), `Black lift` (0–0.25), `Exposure` (proporcionada por el juego / automática) y `Tone intensity` (0–2).
 
 ---
 
