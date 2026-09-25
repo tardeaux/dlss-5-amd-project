@@ -255,7 +255,8 @@
 - **`danielblnc` 专属**：
   - `NR slots`：多槽缓冲数量调节（2～5 槽，默认 3）；
   - `Every-frame`：强制每帧执行 NR 开关；
-  - `New wait mode`：0.3.1 状态冻结/恢复新等待模式开关。
+  - `New wait mode`：0.3.1 / 0.4.0 状态冻结/恢复新等待模式开关；
+  - **仅 0.4.0**：`Style`（默认 / 自然 / 电影感）、`Tone curve`（Reinhard / ACES）、`Black lift`（0～0.25）、`Exposure`（游戏提供 / 自动曝光）以及 `Tone intensity`（0～2）。
 
 ---
 
