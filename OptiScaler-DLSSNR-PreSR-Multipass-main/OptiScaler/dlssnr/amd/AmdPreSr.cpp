@@ -943,7 +943,7 @@ Backend::Backend(ID3D12Device* d, ID3D12CommandQueue* q, const std::filesystem::
     // lands. Three earlier rounds were analysed without a tag and the logs could
     // not be told apart.
     p->LogDiagnostic("AMD graphics build source=" AMD_GRAPHICS_SOURCE_ID);
-    p->Log("AMD submission revision 20260919-1.8.6: multi-slot default; 0.3.1 new wait with guarded restore; Every-frame back on Ins menu" +
+    p->Log("AMD submission revision 20260919-1.8.6: multi-slot default; 0.3.1/0.4.0 new wait with guarded restore; Every-frame back on Ins menu" +
            std::string(kBuildTag));
     try
     {
@@ -2097,7 +2097,7 @@ std::string Backend::Status() const
                 reportedTimeouts += count - p->observedTimeouts[i];
         }
     // Menu / Status must name the runtime that was actually identified —
-    // 0.3.0 and 0.3.1 are both valid, and the user cannot tell them apart
+    // 0.3.0, 0.3.1 and 0.4.0 are valid, and the user cannot tell them apart
     // from pass DLL filenames alone.
     const std::string runtimeTag = L ? (std::string("AMD runtime ") + L->name + " | ") : std::string();
     if (!p->failed && p->lastSubmitted)
