@@ -289,7 +289,15 @@ class Config
     CustomOptional<float> DlssNrLocalStructure { 1.0f };
     CustomOptional<float> DlssNrLocalTone { 1.0f };
     CustomOptional<bool> AmdNeuralLighting { true };
+    // Legacy 0.3.x Daniel control. 0.4.0 names the underlying LocalTone field
+    // "Tone intensity"; keep this key for old configurations and the experimental path.
     CustomOptional<float> AmdNeuralLightingStrength { .5f };
+    // Daniel 0.4.0 controls. AmdToneIntensity falls back to the legacy value on
+    // config load when its new key is absent, so upgrades retain their appearance.
+    CustomOptional<float> AmdToneIntensity { 0.0f };
+    CustomOptional<int> AmdToneCurve { 0 };       // 0 Reinhard, 1 ACES
+    CustomOptional<float> AmdBlackLift { 0.0f }; // runtime range 0..0.25
+    CustomOptional<bool> AmdUseGameExposure { true };
     CustomOptional<int> AmdEncoding { 0 };
     // 1-5 in the ini; the menu offers 2-5. Too few and a frame that finds every
     // buffer busy carries no NR at all, so this decides whether the mode works
