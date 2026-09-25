@@ -19,6 +19,7 @@
 #include <filesystem>
 #include <fstream>
 #include <mutex>
+#include <string_view>
 #include <unordered_set>
 
 namespace DlssNr::AmdBridge
@@ -643,11 +644,27 @@ bool Before(ID3D12GraphicsCommandList* cmd, NVSDK_NGX_Parameter* params, ID3D12C
     // AmdGraphicsWait=1 requests the mapped 0.3.1/0.4.0 1-pixel draw wait (this project's New wait).
     // InitPass/Record still force SpinDraw=0 unless a freeze+restore plan armed.
     s.spinDraw = Config::Instance()->AmdGraphicsWait.value_or_default() ? 1 : 0;
-    // The host owns these mapped controls. 0.3.1 warns that nonzero tone mostly
-    // darkens frames; 0.4.0 exposes the same slot as LocalToneStrength.
     s.encoding=std::clamp(cfg.AmdEncoding.value_or_default(),0,3);
-    s.toneChannels=cfg.AmdNeuralLightingStrength.value_or_default()>0;
-    s.tone=s.toneChannels ? std::clamp(cfg.AmdNeuralLightingStrength.value_or_default(),0.f,1.f) : 0.f;
+    const char* danielVersion = RuntimeName();
+    const bool daniel040 = danielVersion && std::string_view(danielVersion) == "0.4.0";
+    if (daniel040)
+    {
+        // 0.4.0 exposes LocalTone directly as Tone intensity. ToneChannels is a
+        // separate hidden author setting whose default is off, so do not couple
+        // the two the way the legacy 0.3.x control did.
+        s.toneChannels = false;
+        s.tone = std::clamp(cfg.AmdToneIntensity.value_or_default(), 0.f, 2.f);
+        s.style = std::clamp(cfg.DlssNrStyle.value_or_default(), 0u, 2u);
+        s.toneCurve = static_cast<UINT>(std::clamp(cfg.AmdToneCurve.value_or_default(), 0, 1));
+        s.toneLift = std::clamp(cfg.AmdBlackLift.value_or_default(), 0.f, .25f);
+        s.useGameExposure = cfg.AmdUseGameExposure.value_or_default();
+    }
+    else
+    {
+        // Preserve the established 0.3.x fork behavior and its old INI key.
+        s.toneChannels = cfg.AmdNeuralLightingStrength.value_or_default() > 0;
+        s.tone = s.toneChannels ? std::clamp(cfg.AmdNeuralLightingStrength.value_or_default(), 0.f, 1.f) : 0.f;
+    }
     s.structure = cfg.DlssNrLocalStructure.value_or_default();
     s.skin = cfg.DlssNrSkinStructure.value_or_default();
     if (s.skin < 0)
