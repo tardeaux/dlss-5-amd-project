@@ -253,7 +253,8 @@ This project introduced **Multi-Slot Scheduling**: allocating independent parall
 - **`danielblnc` Specific**:
   - `NR slots`: Parallel buffer count (2–5, default 3);
   - `Every-frame`: Enforces denoising on every frame;
-  - `New wait mode`: 0.3.1 state freeze/restore wait mode toggle.
+  - `New wait mode`: 0.3.1 / 0.4.0 state freeze/restore wait mode toggle;
+  - **0.4.0 only**: `Style` (Default / Natural / Cinematic), `Tone curve` (Reinhard / ACES), `Black lift` (0–0.25), `Exposure` (game-provided / auto), and `Tone intensity` (0–2).
 
 ---
 
