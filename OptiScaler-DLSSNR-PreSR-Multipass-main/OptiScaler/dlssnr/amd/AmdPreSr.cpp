@@ -1528,6 +1528,8 @@ ID3D12Resource* Backend::Record(ID3D12GraphicsCommandList* cmd, const Frame& inc
         if (scaled) copyGuide(sl->colour.Get(),p->scaleBaseline.Get());
         const bool settingsChanged = cfg.encoding != p->lastSettings.encoding || cfg.toneChannels != p->lastSettings.toneChannels || cfg.modelScale != p->lastSettings.modelScale || !p->haveSettings || cfg.tone != p->lastSettings.tone ||
                                      cfg.structure != p->lastSettings.structure || cfg.skin != p->lastSettings.skin ||
+                                     cfg.style != p->lastSettings.style || cfg.toneCurve != p->lastSettings.toneCurve ||
+                                     cfg.toneLift != p->lastSettings.toneLift || cfg.useGameExposure != p->lastSettings.useGameExposure ||
                                      cfg.everyFrame != p->lastSettings.everyFrame;
         const bool explicitReset = p->resetRequested.exchange(false);
         const bool gap = p->lastSubmitted && GetTickCount64() - p->lastSubmitted > 250;
@@ -1572,6 +1574,10 @@ ID3D12Resource* Backend::Record(ID3D12GraphicsCommandList* cmd, const Frame& inc
             At<float>(r, L->skin) = cfg.skin;
             At<UINT>(r, L->toneChannels)=cfg.toneChannels?1u:0u;
             At<UINT>(r, L->charMask) = 1; // Enable native semantic character-mask channel.
+            if (L->style) At<UINT>(r, L->style) = cfg.style;
+            if (L->toneCurve) At<UINT>(r, L->toneCurve) = cfg.toneCurve;
+            if (L->toneLift) At<float>(r, L->toneLift) = cfg.toneLift;
+            if (L->useGameExposure) At<uint8_t>(r, L->useGameExposure) = cfg.useGameExposure ? 1 : 0;
             // The old shader ceiling expired at high render resolutions even
             // when inference finished well inside the original runtime's watchdog.
             // Scale the spin allowance with pixels, but retain a hard ceiling
