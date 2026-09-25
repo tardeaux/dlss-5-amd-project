@@ -254,9 +254,21 @@ AmdGraphicsUnsafe=0
 ; true or false - Default is true
 AmdNeuralLighting=true
 
-; Intensity of the neural lighting effect
+; Legacy Daniel 0.3.x neural-lighting control. Retained for old configs.
 ; float value (0.0 to 1.0) - Default is 0.5
 AmdNeuralLightingStrength=0.5
+
+; Daniel 0.4.0 profile and display controls
+; Style: 0 = Default, 1 = Natural, 2 = Cinematic
+Style=0
+; Tone intensity / LocalToneStrength: 0.0 to 2.0. Author 0.4.0 default is 0.
+AmdToneIntensity=0
+; Tone curve: 0 = Reinhard (soft), 1 = ACES (filmic)
+AmdToneCurve=0
+; Black lift / ToneLift: 0.0 to 0.25
+AmdBlackLift=0
+; true = use game-provided exposure when present; false = always auto-expose
+AmdUseGameExposure=true
 
 ; Number of neural rendering passes
 ; 1 to 3 - Default is 1
