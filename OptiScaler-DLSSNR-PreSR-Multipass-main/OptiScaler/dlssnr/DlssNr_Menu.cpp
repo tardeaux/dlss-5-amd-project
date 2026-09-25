@@ -228,7 +228,7 @@ void RenderMenu(Config* config, float menuResScale)
                     if (newWait && restartToTryNewWait)
                         ImGui::OpenPopup("New wait restart");
                 }
-                HelpMarker("On: New wait mode (0.3.1 1-pixel draw). Still being tested."
+                HelpMarker("On: New wait mode (0.3.1/0.4.0 1-pixel draw). Still being tested."
                            "\nOff: Original wait mode (switches immediately)."
                            "\nRestart if prompted: hooks or a pass may not be ready for new wait mode."
                            "\nFrames that cannot use new wait mode still fall back to original wait.");
