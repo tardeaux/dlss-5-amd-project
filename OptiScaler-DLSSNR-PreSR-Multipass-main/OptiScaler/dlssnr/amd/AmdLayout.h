@@ -115,6 +115,12 @@ struct AmdLayout
     // Return addresses after Dispatch calls in the pinned wait helper.
     std::uint32_t waitDispatchInit = 0, waitDispatchFallback = 0;
     std::uint32_t waitDispatchSlices = 0, waitDispatchFinish = 0;
+    // 0.4.0 display/profile controls. Kept at the end so older positional
+    // layout initializers remain valid and naturally leave these as zero.
+    std::uint32_t style = 0;
+    std::uint32_t toneCurve = 0;
+    std::uint32_t toneLift = 0;
+    std::uint32_t useGameExposure = 0;
 };
 
 // 0.2.17 pass DLL, SHA256 bc97f3b0...
@@ -179,7 +185,8 @@ inline constexpr AmdLayout kAmd040 {
     0xa8618, 0xa861c, 0xa8620, 0xa8628, 0xa862c, 0xa8728,
     0xa8700, 0xa8688, 0xa8534, 0xa8550, 0xa8560,
     0xa841c, 0xa8430, 0xa8390, 0x19130, 0x19856,
-    0x19320, 0x196c0, 0x1971a, 0x19807
+    0x19320, 0x196c0, 0x1971a, 0x19807,
+    0xa8630, 0xa8634, 0xa8638, 0xa863c
 };
 
 inline constexpr const AmdLayout* kAmdLayouts[] = { &kAmd0217, &kAmd03, &kAmd031, &kAmd040 };
