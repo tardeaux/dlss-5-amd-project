@@ -1531,6 +1531,12 @@ ID3D12Resource* Backend::Record(ID3D12GraphicsCommandList* cmd, const Frame& inc
                                      cfg.style != p->lastSettings.style || cfg.toneCurve != p->lastSettings.toneCurve ||
                                      cfg.toneLift != p->lastSettings.toneLift || cfg.useGameExposure != p->lastSettings.useGameExposure ||
                                      cfg.everyFrame != p->lastSettings.everyFrame;
+        if (settingsChanged && L->style)
+            p->Log("AMD 0.4 controls: style=" + std::to_string(cfg.style) +
+                   " curve=" + std::to_string(cfg.toneCurve) +
+                   " blackLift=" + std::to_string(cfg.toneLift) +
+                   " gameExposure=" + std::to_string(cfg.useGameExposure ? 1 : 0) +
+                   " tone=" + std::to_string(cfg.tone));
         const bool explicitReset = p->resetRequested.exchange(false);
         const bool gap = p->lastSubmitted && GetTickCount64() - p->lastSubmitted > 250;
         if (f.reset || resize || guideChange || passChange || p->resetAfterTimeout || settingsChanged || explicitReset || gap)
