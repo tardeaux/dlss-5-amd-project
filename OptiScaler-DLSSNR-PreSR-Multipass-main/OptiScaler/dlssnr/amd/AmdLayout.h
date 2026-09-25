@@ -198,4 +198,8 @@ static_assert(kAmd0217.sha256.bytes[0] == 0xbc && kAmd0217.sha256.bytes[31] == 0
 static_assert(kAmd03.sha256.bytes[0] == 0x83 && kAmd03.sha256.bytes[31] == 0x38);
 static_assert(kAmd031.sha256.bytes[0] == 0xb1 && kAmd031.sha256.bytes[31] == 0x54);
 static_assert(kAmd040.sha256.bytes[0] == 0xd6 && kAmd040.sha256.bytes[31] == 0x80);
+static_assert(kAmd031.style == 0 && kAmd031.toneCurve == 0 && kAmd031.toneLift == 0 &&
+              kAmd031.useGameExposure == 0);
+static_assert(kAmd040.style == 0xa8630 && kAmd040.toneCurve == 0xa8634 &&
+              kAmd040.toneLift == 0xa8638 && kAmd040.useGameExposure == 0xa863c);
 }
