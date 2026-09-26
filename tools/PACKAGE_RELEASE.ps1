@@ -3,7 +3,7 @@
   Stage and zip a complete user package (no NVIDIA / danielblnc proprietary files).
   Default product: OptiScaler-AMD-PreSR-1.9.0
     1.9.0  = this fork's product version
-    0.4.0  = newest supported danielblnc runtime (0.3.0 / 0.3.1 also accepted)
+    0.4.1  = newest supported danielblnc runtime (0.3.0 / 0.3.1 / 0.4.0 also accepted)
     lmxxf  = supported lmxxf HIP neural rendering runtime
 
 .EXAMPLE
@@ -258,10 +258,10 @@ AmdNeuralLighting=true
 ; float value (0.0 to 1.0) - Default is 0.5
 AmdNeuralLightingStrength=0.5
 
-; Daniel 0.4.0 profile and display controls
+; Daniel 0.4.x profile and display controls
 ; Style: 0 = Default, 1 = Natural, 2 = Cinematic
 Style=0
-; Tone intensity / LocalToneStrength: 0.0 to 2.0. Author 0.4.0 default is 0.
+; Tone intensity / LocalToneStrength: 0.0 to 2.0. Author 0.4.x default is 0.
 AmdToneIntensity=0
 ; Tone curve: 0 = Reinhard (soft), 1 = ACES (filmic)
 AmdToneCurve=0
