@@ -424,13 +424,14 @@ void RenderMenu(Config* config, float menuResScale)
                 editingPasses=ImGui::IsItemActive();
                 if(ImGui::IsItemDeactivatedAfterEdit())config->DlssNrPasses=uint32_t(passes);
                 const char* danielVersion = DlssNr::AmdBridge::RuntimeName();
-                const bool daniel040 = danielVersion && std::string_view(danielVersion) == "0.4.0";
-                if (daniel040)
+                const bool daniel04 = danielVersion &&
+                    (std::string_view(danielVersion) == "0.4.0" || std::string_view(danielVersion) == "0.4.1");
+                if (daniel04)
                 {
                     int style = std::clamp<int>(config->DlssNrStyle.value_or_default(), 0, 2);
                     if (ImGui::Combo("Style", &style, "Default\0Natural\0Cinematic\0"))
                         config->DlssNrStyle = static_cast<uint32_t>(style);
-                    HelpMarker("The network's Style channel. 0.4.0: Default, Natural, or Cinematic.");
+                    HelpMarker("The network's Style channel. 0.4.x: Default, Natural, or Cinematic.");
 
                     int curve = std::clamp(config->AmdToneCurve.value_or_default(), 0, 1);
                     if (ImGui::Combo("Tone curve", &curve, "Reinhard (soft)\0ACES (filmic)\0"))
