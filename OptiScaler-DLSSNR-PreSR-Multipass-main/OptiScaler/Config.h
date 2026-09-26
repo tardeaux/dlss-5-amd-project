@@ -292,7 +292,7 @@ class Config
     // Legacy 0.3.x Daniel control. 0.4.0 names the underlying LocalTone field
     // "Tone intensity"; keep this key for old configurations and the experimental path.
     CustomOptional<float> AmdNeuralLightingStrength { .5f };
-    // Daniel 0.4.0 controls. AmdToneIntensity falls back to the legacy value on
+    // Daniel 0.4.x controls. AmdToneIntensity falls back to the legacy value on
     // config load when its new key is absent, so upgrades retain their appearance.
     CustomOptional<float> AmdToneIntensity { 0.0f };
     CustomOptional<int> AmdToneCurve { 0 };       // 0 Reinhard, 1 ACES
