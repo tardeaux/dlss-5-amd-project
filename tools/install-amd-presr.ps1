@@ -354,12 +354,13 @@ function Find-FirstFile([string[]]$paths) {
 
 # Hash: only known danielblnc runtimes are supported. The RVA layout is pinned to
 # each binary — a different build will not run correctly. Fail closed.
-# 0.3.0 = AmdLayout.h kAmd03; 0.3.1 = kAmd031; 0.4.0 = kAmd040.
+# 0.3.0 = AmdLayout.h kAmd03; 0.3.1 = kAmd031; 0.4.0 = kAmd040; 0.4.1 = kAmd041.
 $expectedA030 = '8321CAE728D28CB7632D0D58D3D913E91132BF7645C126505698FBE4CD5A0138'
 $expectedA031 = 'B108D6407EB7F094A4F9111EDD778EEE7B978B648D413A9FC7AEEDFDD914C154'
 $expectedA040 = 'D62BE3D8B9FBB3C6C81982C4DDB3DFA00EB9662E3206925CBE5B7E1BC6798B80'
+$expectedA041 = '823063EB4C76B1334FD1800C41798873AE61D4016AF0406F1F0B9DCE57B1D376'
 $knownA0217  = 'BC97F3B06718E19042ACAF227BFE15D1E43D4977F9DC2E39994FCC511445FF4E'
-$expectedAuthor = @($expectedA030, $expectedA031, $expectedA040)
+$expectedAuthor = @($expectedA030, $expectedA031, $expectedA040, $expectedA041)
 
 # Walk every candidate and accept only a file whose SHA256 is a known runtime.
 # A game may have B installed as version.dll (README allows that); the first
@@ -539,7 +540,7 @@ if ($installDaniel) {
     if (-not $srcA -or !(Test-Path -LiteralPath $srcA -PathType Leaf)) {
         Fail @"
 Still missing a known DLSS-NR-on-AMD runtime (version.dll) after danielblnc setup.
-Supported: 0.3.0, 0.3.1, or 0.4.0.
+Supported: 0.3.0, 0.3.1, 0.4.0, or 0.4.1.
 1. Run dlssnr_on_amd_setup.exe yourself and finish its install
 2. Put the version.dll it produces next to Setup.bat (or leave it in the game folder)
 Download from https://github.com/danielblnc/DLSS-NR-on-AMD/releases
@@ -550,12 +551,12 @@ Download from https://github.com/danielblnc/DLSS-NR-on-AMD/releases
     Write-Host ("danielblnc runtime SHA256: {0}" -f $hashA)
     if ($expectedAuthor -notcontains $hashA) {
         $what = 'unknown build'
-        if ($hashA -eq $knownA0217) { $what = 'this is 0.2.17, not 0.3.0/0.3.1/0.4.0' }
+        if ($hashA -eq $knownA0217) { $what = 'this is 0.2.17, not 0.3.0/0.3.1/0.4.0/0.4.1' }
         Fail @"
 $srcA is not a supported DLSS-NR-on-AMD runtime ($what).
   file:     $srcA
   got:      $hashA
-  expected: $expectedA030 (0.3.0), $expectedA031 (0.3.1), or $expectedA040 (0.4.0)
+  expected: $expectedA030 (0.3.0), $expectedA031 (0.3.1), $expectedA040 (0.4.0), or $expectedA041 (0.4.1)
 Download a supported runtime from https://github.com/danielblnc/DLSS-NR-on-AMD/releases
 "@
     }
