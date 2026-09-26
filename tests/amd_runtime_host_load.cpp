@@ -104,7 +104,7 @@ int wmain(int argc, wchar_t** argv)
             Expect(duplicateRejected, "an already-loaded image cannot bypass bootstrap verification");
             std::puts("PASS: synthetic DLL loader interception; mapped image identity; duplicate-load rejection");
         }
-        std::puts("PASS: four pinned bootstrap filters; unknown rejection; unchanged host CreateThread forwarding");
+        std::puts("PASS: five pinned bootstrap filters; unknown rejection; unchanged host CreateThread forwarding");
         return 0;
     }
     catch (const std::exception& error)
