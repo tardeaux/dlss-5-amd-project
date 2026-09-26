@@ -378,7 +378,13 @@ bool Config::Reload(std::filesystem::path iniPath)
             DlssNrLocalStructure.set_from_config(readFloat("DlssNr", "LocalStructure"));
             DlssNrLocalTone.set_from_config(readFloat("DlssNr", "LocalTone"));
             AmdNeuralLighting.set_from_config(readBool("DlssNr", "AmdNeuralLighting"));
-            AmdNeuralLightingStrength.set_from_config(readFloat("DlssNr", "AmdNeuralLightingStrength"));
+            const auto legacyAmdTone = readFloat("DlssNr", "AmdNeuralLightingStrength");
+            AmdNeuralLightingStrength.set_from_config(legacyAmdTone);
+            const auto amdToneIntensity = readFloat("DlssNr", "AmdToneIntensity");
+            AmdToneIntensity.set_from_config(amdToneIntensity.has_value() ? amdToneIntensity : legacyAmdTone);
+            AmdToneCurve.set_from_config(readInt("DlssNr", "AmdToneCurve"));
+            AmdBlackLift.set_from_config(readFloat("DlssNr", "AmdBlackLift"));
+            AmdUseGameExposure.set_from_config(readBool("DlssNr", "AmdUseGameExposure"));
             AmdEncoding.set_from_config(readInt("DlssNr", "AmdEncoding"));
             AmdSlots.set_from_config(readInt("DlssNr", "AmdSlots"));
             AmdNrScale.set_from_config(readFloat("DlssNr", "AmdModelScale"));
@@ -1395,6 +1401,10 @@ bool Config::SaveIni()
     ini.SetValue("DlssNr", "LocalTone", GetFloatValue(Instance()->DlssNrLocalTone.value_for_config()).c_str());
     ini.SetValue("DlssNr", "AmdNeuralLighting", GetBoolValue(Instance()->AmdNeuralLighting.value_for_config()).c_str());
     ini.SetValue("DlssNr", "AmdNeuralLightingStrength", GetFloatValue(Instance()->AmdNeuralLightingStrength.value_for_config()).c_str());
+    ini.SetValue("DlssNr", "AmdToneIntensity", GetFloatValue(Instance()->AmdToneIntensity.value_for_config()).c_str());
+    ini.SetValue("DlssNr", "AmdToneCurve", GetIntValue(Instance()->AmdToneCurve.value_for_config()).c_str());
+    ini.SetValue("DlssNr", "AmdBlackLift", GetFloatValue(Instance()->AmdBlackLift.value_for_config()).c_str());
+    ini.SetValue("DlssNr", "AmdUseGameExposure", GetBoolValue(Instance()->AmdUseGameExposure.value_for_config()).c_str());
     ini.SetValue("DlssNr", "AmdEncoding", GetIntValue(Instance()->AmdEncoding.value_for_config()).c_str());
     ini.SetValue("DlssNr", "AmdSlots", GetIntValue(Instance()->AmdSlots.value_for_config()).c_str());
     ini.SetValue("DlssNr", "AmdModelScale", GetFloatValue(Instance()->AmdNrScale.value_for_config()).c_str());

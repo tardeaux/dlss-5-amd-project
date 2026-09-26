@@ -290,6 +290,12 @@ class Config
     CustomOptional<float> DlssNrLocalTone { 1.0f };
     CustomOptional<bool> AmdNeuralLighting { true };
     CustomOptional<float> AmdNeuralLightingStrength { .5f };
+    // Daniel 0.3.3+ overlay/profile controls. Style reuses DlssNrStyle above;
+    // the remaining controls are absent from upstream's Opti menu/config.
+    CustomOptional<float, SoftDefault> AmdToneIntensity { 0.0f };
+    CustomOptional<int> AmdToneCurve { 0 };       // 0 Reinhard, 1 ACES
+    CustomOptional<float> AmdBlackLift { 0.0f }; // runtime ToneLift, 0..0.25
+    CustomOptional<bool> AmdUseGameExposure { true };
     CustomOptional<int> AmdEncoding { 0 };
     // 1-5 in the ini; the menu offers 2-5. Too few and a frame that finds every
     // buffer busy carries no NR at all, so this decides whether the mode works

@@ -19,6 +19,7 @@
 #include <filesystem>
 #include <fstream>
 #include <mutex>
+#include <string_view>
 #include <unordered_set>
 
 namespace DlssNr::AmdBridge
@@ -661,11 +662,27 @@ bool Before(ID3D12GraphicsCommandList* cmd, NVSDK_NGX_Parameter* params, ID3D12C
     // AmdGraphicsWait=1 requests 0.3.1's 1-pixel draw wait (this project's New wait).
     // InitPass/Record still force SpinDraw=0 unless a freeze+restore plan armed.
     s.spinDraw = Config::Instance()->AmdGraphicsWait.value_or_default() ? 1 : 0;
-    // The pinned AMD binary explicitly disables the broad lighting/colour
-    // channels. Its embedded UI warns that nonzero tone mostly darkens frames.
     s.encoding=std::clamp(cfg.AmdEncoding.value_or_default(),0,3);
-    s.toneChannels=cfg.AmdNeuralLightingStrength.value_or_default()>0;
-    s.tone=s.toneChannels ? std::clamp(cfg.AmdNeuralLightingStrength.value_or_default(),0.f,1.f) : 0.f;
+    const char* danielVersion = RuntimeName();
+    const bool danielOverlay = danielVersion &&
+        (std::string_view(danielVersion) == "0.3.3" ||
+         std::string_view(danielVersion) == "0.4.0" ||
+         std::string_view(danielVersion) == "0.4.1");
+    if (danielOverlay)
+    {
+        // 0.3.3+ exposes LocalTone directly as Tone intensity. ToneChannels is
+        // a separate hidden author setting whose default is off.
+        s.toneChannels = false;
+        s.tone = std::clamp(cfg.AmdToneIntensity.value_or_default(), 0.f, 2.f);
+    }
+    else
+    {
+        // Preserve upstream's established behavior for older Daniel runtimes.
+        s.toneChannels = cfg.AmdNeuralLightingStrength.value_or_default() > 0;
+        s.tone = s.toneChannels
+            ? std::clamp(cfg.AmdNeuralLightingStrength.value_or_default(), 0.f, 1.f)
+            : 0.f;
+    }
     s.structure = cfg.DlssNrLocalStructure.value_or_default();
     s.skin = cfg.DlssNrSkinStructure.value_or_default();
     if (s.skin < 0)

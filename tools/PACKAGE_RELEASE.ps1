@@ -3,7 +3,7 @@
   Stage and zip a complete user package (no NVIDIA / danielblnc proprietary files).
   Default product: OptiScaler-AMD-PreSR-1.9.3-alpha
     1.9.0  = this fork's product version
-    0.4.0  = supported danielblnc runtime (0.3.x also accepted)
+    0.4.1  = supported danielblnc runtime (0.3.x / 0.4.0 also accepted)
     lmxxf  = supported lmxxf HIP neural rendering runtime
 
 .EXAMPLE
@@ -217,7 +217,7 @@ RunBeforeSR=true
 
 ; Selects the neural rendering backend
 ; lmxxf  - Open-source AMD HIP neural rendering pipeline (using native-game-tiled-assets)
-; daniel - danielblnc 0.3.0 / 0.3.1 / 0.3.2 / 0.3.3 / 0.4.0 runtime (using dlssnr_amd_pass*.dll + weights.bin)
+; daniel - danielblnc 0.3.0 / 0.3.1 / 0.3.2 / 0.3.3 / 0.4.0 / 0.4.1 runtime (using dlssnr_amd_pass*.dll + weights.bin)
 ; lmxxf or daniel only. Turn the pass off with Enabled=false, not with NrBackend.
 ; If the chosen host is missing its files, the other installed host runs instead.
 NrBackend=lmxxf
@@ -299,9 +299,21 @@ AmdGraphicsUnsafe=0
 ; true or false - Default is true
 AmdNeuralLighting=true
 
-; Intensity of the neural lighting effect
+; Legacy Daniel pre-0.3.3 neural-lighting control.
 ; float value (0.0 to 1.0) - Default is 0.5
 AmdNeuralLightingStrength=0.5
+
+; Daniel 0.3.3+ overlay/profile controls
+; Style: 0 = Default, 1 = Natural, 2 = Cinematic
+Style=0
+; Tone intensity / LocalToneStrength: 0.0 to 2.0
+AmdToneIntensity=0
+; Tone curve: 0 = Reinhard (soft), 1 = ACES (filmic)
+AmdToneCurve=0
+; Black lift / ToneLift: 0.0 to 0.25
+AmdBlackLift=0
+; true = use game exposure when usable; false = force Daniel auto-exposure
+AmdUseGameExposure=true
 
 ; Number of neural rendering passes
 ; 1 to 3 - Default is 1

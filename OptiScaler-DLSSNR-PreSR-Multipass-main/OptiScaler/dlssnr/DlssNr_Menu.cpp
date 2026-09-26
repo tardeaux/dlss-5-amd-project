@@ -16,6 +16,7 @@
 #include <imgui/imgui.h>
 
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <algorithm>
 #include <cmath>
@@ -415,6 +416,7 @@ void RenderMenu(Config* config, float menuResScale)
                     const bool commit=ImGui::IsItemDeactivatedAfterEdit();
                     storage->SetFloat(id,value);storage->SetBool(activeId,active);
                     if(commit)option=value;
+                    return commit;
                 };
                 static int passes = 1;
                 static bool editingPasses = false;
@@ -422,9 +424,52 @@ void RenderMenu(Config* config, float menuResScale)
                 ImGui::SliderInt("AMD neural passes", &passes, 1, 3);
                 editingPasses=ImGui::IsItemActive();
                 if(ImGui::IsItemDeactivatedAfterEdit())config->DlssNrPasses=uint32_t(passes);
-                neuralSlider("Lightning Strength",config->AmdNeuralLightingStrength,0,1);
-                neuralSlider("AMD structure",config->DlssNrLocalStructure,0,2);
-                neuralSlider("AMD character structure",config->DlssNrSkinStructure,0,2);
+
+                const char* danielVersion = DlssNr::AmdBridge::RuntimeName();
+                const bool danielOverlay = danielVersion &&
+                    (std::string_view(danielVersion) == "0.3.3" ||
+                     std::string_view(danielVersion) == "0.4.0" ||
+                     std::string_view(danielVersion) == "0.4.1");
+                if (danielOverlay)
+                {
+                    int style = std::clamp<int>(config->DlssNrStyle.value_or_default(), 0, 2);
+                    if (ImGui::Combo("Style", &style, "Default\0Natural\0Cinematic\0"))
+                    {
+                        config->DlssNrStyle = static_cast<uint32_t>(style);
+                        DlssNr::AmdBridge::InvalidateHistory();
+                    }
+                    HelpMarker("Daniel overlay profile: Default, Natural, or Cinematic.");
+
+                    int curve = std::clamp(config->AmdToneCurve.value_or_default(), 0, 1);
+                    if (ImGui::Combo("Tone curve", &curve, "Reinhard (soft)\0ACES (filmic)\0"))
+                    {
+                        config->AmdToneCurve = curve;
+                        DlssNr::AmdBridge::InvalidateHistory();
+                    }
+
+                    if (neuralSlider("Black lift", config->AmdBlackLift, 0.f, .25f))
+                        DlssNr::AmdBridge::InvalidateHistory();
+
+                    int exposure = config->AmdUseGameExposure.value_or_default() ? 0 : 1;
+                    if (ImGui::Combo("Exposure", &exposure, "Game-provided\0Auto-exposure\0"))
+                    {
+                        config->AmdUseGameExposure = exposure == 0;
+                        DlssNr::AmdBridge::InvalidateHistory();
+                    }
+                    HelpMarker("Game-provided follows upstream's safe fallback: if no usable exposure texture exists, Daniel still auto-exposes.");
+
+                    if (neuralSlider("Tone intensity", config->AmdToneIntensity, 0.f, 2.f))
+                        DlssNr::AmdBridge::InvalidateHistory();
+
+                    neuralSlider("AMD structure",config->DlssNrLocalStructure,0,2);
+                    neuralSlider("AMD character structure",config->DlssNrSkinStructure,0,2);
+                }
+                else
+                {
+                    neuralSlider("Lightning Strength",config->AmdNeuralLightingStrength,0,1);
+                    neuralSlider("AMD structure",config->DlssNrLocalStructure,0,2);
+                    neuralSlider("AMD character structure",config->DlssNrSkinStructure,0,2);
+                }
             }
 
             if (isLmxxf)
@@ -677,6 +722,11 @@ void RenderMenu(Config* config, float menuResScale)
                         config->AmdNeuralLighting=true;
                         config->AmdEncoding=0;
                         config->AmdNeuralLightingStrength=.5f;
+                        config->DlssNrStyle=0u;
+                        config->AmdToneIntensity=0.0f;
+                        config->AmdToneCurve=0;
+                        config->AmdBlackLift=0.0f;
+                        config->AmdUseGameExposure=true;
                         DlssNr::AmdBridge::InvalidateHistory();
                     }
                     ImGui::TreePop();

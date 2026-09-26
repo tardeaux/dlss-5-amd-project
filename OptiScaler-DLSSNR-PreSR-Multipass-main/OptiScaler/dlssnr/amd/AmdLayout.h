@@ -229,7 +229,24 @@ inline constexpr AmdLayout kAmd040 {
     0xa8630, 0xa8634, 0xa8638, 0xa863c
 };
 
-inline constexpr const AmdLayout* kAmdLayouts[] = { &kAmd0217, &kAmd03, &kAmd031, &kAmd032, &kAmd033, &kAmd040 };
+// 0.4.1 version.dll (SHA 823063eb). Role-for-role remap from 0.4.0.
+// Packet remains 0x60; overlay controls retain the 0.3.3+ semantics.
+inline constexpr AmdLayout kAmd041 {
+    "0.4.1",
+    9916928,
+    Sha256FromHex("823063eb4c76b1334fd1800c41798873ae61d4016af0406f1f0b9dce57b1d376"),
+    0, 0x26130, 0x14c40, 0x9d80, 0x188d0, 0xaa7d8,
+    0xa98e0, 0xa98e8, 0xa98f8, 0xa9a40, 0xa9a48, 0xa9d48, 0xa9d4a,
+    0xaa250, 0xaa284, 0xaa288, 0xaa2b4, 0xaa4a0, 0xaa580, 0xaa58c,
+    0xaa630, 0xaa634, 0xaa63c, 0xaa63d, 0xaa63e, 0xaa63f, 0xaa640,
+    0xaa650, 0xaa654, 0xaa658, 0xaa660, 0xaa664, 0xaa760,
+    0xaa738, 0xaa6c0, 0xaa56c, 0xaa588, 0xaa598,
+    0xaa454, 0xaa468, 0xaa3c8, 0x19120, 0x19846,
+    0x19310, 0x196b0, 0x1970a, 0x197f7,
+    0xaa668, 0xaa66c, 0xaa670, 0xaa674
+};
+
+inline constexpr const AmdLayout* kAmdLayouts[] = { &kAmd0217, &kAmd03, &kAmd031, &kAmd032, &kAmd033, &kAmd040, &kAmd041 };
 
 // Compile-time sanity: the hex helper must land on the first/last digest byte
 // of each known runtime. A wrong-length literal already fails Sha256FromHex;
@@ -240,4 +257,7 @@ static_assert(kAmd031.sha256.bytes[0] == 0xb1 && kAmd031.sha256.bytes[31] == 0x5
 static_assert(kAmd032.sha256.bytes[0] == 0xb9 && kAmd032.sha256.bytes[31] == 0x1e);
 static_assert(kAmd033.sha256.bytes[0] == 0x90 && kAmd033.sha256.bytes[31] == 0x12);
 static_assert(kAmd040.sha256.bytes[0] == 0xd6 && kAmd040.sha256.bytes[31] == 0x80);
+static_assert(kAmd041.sha256.bytes[0] == 0x82 && kAmd041.sha256.bytes[31] == 0x76);
+static_assert(kAmd041.style == 0xaa668 && kAmd041.toneCurve == 0xaa66c &&
+              kAmd041.toneLift == 0xaa670 && kAmd041.useGameExposure == 0xaa674);
 }
