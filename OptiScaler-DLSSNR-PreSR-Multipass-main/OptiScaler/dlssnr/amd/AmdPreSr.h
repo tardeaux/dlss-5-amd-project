@@ -56,7 +56,7 @@ struct Settings
     // Graphics preference from the bridge; each Record still requires admission.
     int spinDraw = 0;
     float tone = 0, structure = 1, skin = 1;
-    // Daniel 0.4.0 profile/display controls; ignored by older mapped layouts.
+    // Daniel 0.4.x profile/display controls; ignored by older mapped layouts.
     UINT style = 0;
     UINT toneCurve = 0;
     float toneLift = 0;
