@@ -641,15 +641,16 @@ bool Before(ID3D12GraphicsCommandList* cmd, NVSDK_NGX_Parameter* params, ID3D12C
     s.passes = cfg.DlssNrPasses.value_or_default();
     s.everyFrame = cfg.AmdEveryFrame.value_or_default();
     s.slots = std::clamp(cfg.AmdSlots.value_or_default(), 1, 5);
-    // AmdGraphicsWait=1 requests the mapped 0.3.1/0.4.0 1-pixel draw wait (this project's New wait).
+    // AmdGraphicsWait=1 requests the mapped 0.3.1/0.4.x 1-pixel draw wait (this project's New wait).
     // InitPass/Record still force SpinDraw=0 unless a freeze+restore plan armed.
     s.spinDraw = Config::Instance()->AmdGraphicsWait.value_or_default() ? 1 : 0;
     s.encoding=std::clamp(cfg.AmdEncoding.value_or_default(),0,3);
     const char* danielVersion = RuntimeName();
-    const bool daniel040 = danielVersion && std::string_view(danielVersion) == "0.4.0";
-    if (daniel040)
+    const bool daniel04 = danielVersion &&
+        (std::string_view(danielVersion) == "0.4.0" || std::string_view(danielVersion) == "0.4.1");
+    if (daniel04)
     {
-        // 0.4.0 exposes LocalTone directly as Tone intensity. ToneChannels is a
+        // 0.4.x exposes LocalTone directly as Tone intensity. ToneChannels is a
         // separate hidden author setting whose default is off, so do not couple
         // the two the way the legacy 0.3.x control did.
         s.toneChannels = false;
